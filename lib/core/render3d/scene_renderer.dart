@@ -31,6 +31,7 @@ class RenderScene {
   final SceneLighting lighting = SceneLighting();
   final List<MeshInstance> objects = [];
   final List<Billboard> billboards = [];
+  final List<SpriteInstance> sprites = [];
 }
 
 /// Statistics for profiling overlays and tests.
@@ -61,7 +62,12 @@ class SceneRenderer {
   late Float32List _outXy;
   late Int32List _outCol;
   final Int32List _bucketCount = Int32List(_buckets + 1);
+  final Int32List _bucketStart = Int32List(_buckets + 1);
   int _tri = 0;
+
+  // Projected sprites for the current frame.
+  final List<_ProjectedSprite> _sprites = [];
+  final ui.Paint _spritePaint = ui.Paint()..filterQuality = ui.FilterQuality.medium;
 
   void _ensure(int cap) {
     if (cap <= _cap) return;
@@ -97,8 +103,12 @@ class SceneRenderer {
     for (final b in scene.billboards) {
       if (b.active) _emitBillboard(b, cam);
     }
+    _sprites.clear();
+    for (final s in scene.sprites) {
+      if (s.visible && s.image != null && s.alpha > 0.004) _projectSprite(s, cam);
+    }
     stats.drawn = _tri;
-    if (_tri > 0) {
+    if (_tri > 0 || _sprites.isNotEmpty) {
       _sortAndDraw(canvas);
     }
     _sw.stop();
@@ -351,8 +361,49 @@ class SceneRenderer {
     }
   }
 
+  void _projectSprite(SpriteInstance s, Camera3D cam) {
+    final dx = s.x - cam.ex, dy = s.y - cam.ey, dz = s.z - cam.ez;
+    final vz = dx * cam.fx + dy * cam.fy + dz * cam.fz;
+    if (vz < cam.near) return;
+    final sx = cam.cx + cam.focal * (dx * cam.rx + dy * cam.ry + dz * cam.rz) / vz;
+    final sy = cam.cy - cam.focal * (dx * cam.ux + dy * cam.uy + dz * cam.uz) / vz;
+    final w = cam.focal * s.width / vz, h = cam.focal * s.height / vz;
+    if (w < 0.5 || h < 0.5) return;
+    _sprites.add(_ProjectedSprite(s, sx, sy, w, h, vz + s.depthBias));
+  }
+
+  void _drawSprite(ui.Canvas canvas, _ProjectedSprite p) {
+    final s = p.sprite;
+    _spritePaint.color = ui.Color.fromRGBO(255, 255, 255, s.alpha.clamp(0.0, 1.0));
+    canvas
+      ..save()
+      ..translate(p.sx, p.sy)
+      ..rotate(s.rotation)
+      ..scale(s.scaleX, s.scaleY)
+      ..drawImageRect(s.image!, s.src, ui.Rect.fromLTWH(-p.w * s.anchorX, -p.h * s.anchorY, p.w, p.h), _spritePaint)
+      ..restore();
+  }
+
+  void _drawRange(ui.Canvas canvas, int from, int to) {
+    if (to <= from) return;
+    final vertices = ui.Vertices.raw(
+      ui.VertexMode.triangles,
+      Float32List.sublistView(_outXy, from * 6, to * 6),
+      colors: Int32List.sublistView(_outCol, from * 3, to * 3),
+    );
+    canvas.drawVertices(vertices, ui.BlendMode.dst, _paint);
+    vertices.dispose();
+  }
+
   void _sortAndDraw(ui.Canvas canvas) {
     final n = _tri;
+    if (n == 0) {
+      _sprites.sort((a, b) => b.depth.compareTo(a.depth));
+      for (final s in _sprites) {
+        _drawSprite(canvas, s);
+      }
+      return;
+    }
     var minD = double.infinity, maxD = -double.infinity;
     for (var i = 0; i < n; i++) {
       final d = _depth[i];
@@ -371,6 +422,7 @@ class SceneRenderer {
     for (var i = 0; i < _buckets; i++) {
       counts[i + 1] += counts[i];
     }
+    _bucketStart.setAll(0, counts);
     for (var i = 0; i < n; i++) {
       final k = ((maxD - _depth[i]) * scale).toInt();
       _order[counts[k]++] = i;
@@ -390,12 +442,34 @@ class SceneRenderer {
       outCol[d3 + 1] = col[s3 + 1];
       outCol[d3 + 2] = col[s3 + 2];
     }
-    final vertices = ui.Vertices.raw(
-      ui.VertexMode.triangles,
-      Float32List.sublistView(outXy, 0, n * 6),
-      colors: Int32List.sublistView(outCol, 0, n * 3),
-    );
-    canvas.drawVertices(vertices, ui.BlendMode.dst, _paint);
-    vertices.dispose();
+    if (_sprites.isEmpty) {
+      _drawRange(canvas, 0, n);
+      return;
+    }
+    // Interleave sprites: each one is drawn after every triangle farther away than it (painter's order).
+    _sprites.sort((a, b) => b.depth.compareTo(a.depth));
+    var drawn = 0;
+    for (final s in _sprites) {
+      int split;
+      if (s.depth >= maxD) {
+        split = 0;
+      } else if (s.depth <= minD) {
+        split = n;
+      } else {
+        split = _bucketStart[((maxD - s.depth) * scale).toInt()];
+      }
+      if (split < drawn) split = drawn;
+      _drawRange(canvas, drawn, split);
+      drawn = split;
+      _drawSprite(canvas, s);
+    }
+    _drawRange(canvas, drawn, n);
   }
+}
+
+class _ProjectedSprite {
+  _ProjectedSprite(this.sprite, this.sx, this.sy, this.w, this.h, this.depth);
+
+  final SpriteInstance sprite;
+  final double sx, sy, w, h, depth;
 }

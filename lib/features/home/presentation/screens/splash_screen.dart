@@ -16,6 +16,7 @@ import '../../../player/data/player_repository.dart';
 import '../../../player/presentation/controllers/player_controller.dart';
 import '../../../settings/data/settings_repository.dart';
 import '../../../settings/presentation/controllers/settings_controller.dart';
+import '../../../shop/data/ball_sprites.dart';
 import '../../../shop/data/skin_catalog.dart';
 
 /// Loads storage, profile, settings and audio while the 3D tower spins, then opens Home.
@@ -50,6 +51,8 @@ class SplashController extends GetxController {
       final player = Get.find<PlayerController>();
       final mode = Get.find<SettingsController>().value.mode;
       Get.find<LevelGenerator>().generate(player.currentLevel.value, mode);
+      progress.value = 0.9;
+      await BallSprites.instance.ensureLoaded();
       progress.value = 1;
     } catch (e) {
       Log.w('Splash', 'load failed: $e');

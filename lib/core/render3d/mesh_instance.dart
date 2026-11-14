@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'mesh.dart';
 
@@ -81,4 +82,28 @@ class Billboard {
   double size = 0.1;
   int color = 0xffffffff;
   bool active = false;
+}
+
+/// A textured, camera-facing quad placed in the 3D scene and depth-sorted together with the triangles
+/// (the renderer splits its single draw call around it). Used for the pre-rendered ball and flame sprites.
+class SpriteInstance {
+  ui.Image? image;
+
+  /// Source rectangle inside [image] (current animation frame).
+  ui.Rect src = ui.Rect.zero;
+  double x = 0, y = 0, z = 0;
+
+  /// World-space size of the drawn quad.
+  double width = 1, height = 1;
+
+  /// Point of the quad (0..1 of width/height) that sits on the world position.
+  double anchorX = 0.5, anchorY = 0.5;
+
+  /// Screen-space rotation (radians, clockwise) and non-uniform scale (squash & stretch).
+  double rotation = 0, scaleX = 1, scaleY = 1;
+  double alpha = 1;
+
+  /// Added to the view depth when sorting (positive = drawn as if farther away).
+  double depthBias = 0;
+  bool visible = true;
 }

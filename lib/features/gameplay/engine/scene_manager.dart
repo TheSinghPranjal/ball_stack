@@ -8,6 +8,7 @@ import '../../../core/render3d/mesh.dart';
 import '../../../core/render3d/mesh_factory.dart';
 import '../../../core/render3d/mesh_instance.dart';
 import '../../../core/render3d/scene_renderer.dart';
+import '../../shop/data/ball_sprites.dart';
 import '../../shop/domain/ball_skin.dart';
 import '../domain/level_config.dart';
 import '../domain/quality_profile.dart';
@@ -73,6 +74,14 @@ class SceneManager {
 
   double _rollAngle = 0;
   double _spin = 0;
+
+  /// Pre-rendered realistic ball + flame (falls back to the procedural [ball] mesh until sprites load).
+  final SpriteInstance ballSprite = SpriteInstance();
+  final SpriteInstance flameSprite = SpriteInstance()
+    ..anchorY = BallSpriteSet.flameRoot
+    ..depthBias = 0.08;
+  double _lastBallY = double.nan;
+  double _vy = 0;
   bool ballVisible = true;
 
   BallSkin get skin => _skin;
@@ -156,6 +165,50 @@ class SceneManager {
       ..tintAmount = fire && !_skin.fiery ? 0.55 : 0
       ..emissiveBoost = fire ? 0.45 : (glow ? 0.2 : 0);
 
+    // ---- sprite ball + speed-driven flame
+    if (dt > 0 && !_lastBallY.isNaN) {
+      final v = (ballY - _lastBallY) / dt;
+      _vy += (v - _vy) * math.min(1.0, dt * 14);
+    }
+    _lastBallY = ballY;
+    final sprites = BallSprites.instance.of(_skin.id);
+    if (sprites != null) {
+      const br = GameConstants.ballRadius;
+      final size = br / BallSpriteSet.ballRadius;
+      // The ball rolls as the tower turns under it, plus a slow idle spin.
+      final roll = (towerAngle * 2.2 + time * 0.8) / (2 * math.pi) * BallSpriteSet.frames;
+      ballSprite
+        ..image = sprites.ball
+        ..src = sprites.ballFrame(((roll.floor() % BallSpriteSet.frames) + BallSpriteSet.frames) % BallSpriteSet.frames)
+        ..visible = ballVisible
+        ..width = size
+        ..height = size
+        ..scaleX = sxz
+        ..scaleY = sy
+        ..x = 0
+        ..y = ballY - (1 - sy) * br
+        ..z = r;
+
+      // Flame trails behind the motion: up while falling, down while rising, full blaze in fireball mode.
+      final rising = _vy > 0;
+      var k = ((_vy.abs() - 1) / 9).clamp(0.0, 1.0) * (rising ? 0.42 : 1.0);
+      if (_skin.fiery) k = math.max(k, 0.45);
+      if (fire) k = 1;
+      final flames = fire && !_skin.fiery ? (BallSprites.instance.of('ember') ?? sprites) : sprites;
+      final w = 2 * br * 1.15 / BallSpriteSet.flameRootWidth;
+      flameSprite
+        ..image = flames.flame
+        ..src = flames.flameFrame((time * 16).floor())
+        ..visible = ballVisible && k > 0.02
+        ..alpha = 0.45 + 0.55 * k
+        ..width = w * (0.9 + 0.2 * k)
+        ..height = w * BallSpriteSet.flameH / BallSpriteSet.flameW * (0.55 + 1.1 * k)
+        ..rotation = rising ? math.pi : 0
+        ..x = 0
+        ..y = ballY
+        ..z = r;
+    }
+
     // ---- shadow on the floor below
     if (currentFloor < level.floorCount) {
       final spec = level.floors[currentFloor];
@@ -191,7 +244,8 @@ class SceneManager {
       final k = 1 - i / _trail.length;
       b.size = GameConstants.ballRadius * (fire ? 1.25 : 0.85) * k;
       b.color = ColorMath.withAlpha(trailColor, (fire ? 0.75 : 0.45) * k);
-      if (!ballVisible) b.active = false;
+      // The flame sprite replaces the dotted trail when the realistic ball is shown.
+      if (!ballVisible || sprites != null) b.active = false;
     }
     if (fire || _skin.fiery) {
       particles.flame(0, ballY, r, color: fire ? 0xFFFF6A1A : _skin.trail);
@@ -213,7 +267,14 @@ class SceneManager {
     }
     destruction.addTo(objs);
     if (shadow.visible) objs.add(shadow);
-    objs.add(ball);
+    final sp = scene.sprites..clear();
+    if (sprites != null) {
+      sp
+        ..add(flameSprite)
+        ..add(ballSprite);
+    } else {
+      objs.add(ball);
+    }
     final bbs = scene.billboards..clear();
     bbs.addAll(_trail);
     bbs.addAll(particles.billboards);

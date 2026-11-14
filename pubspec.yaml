@@ -66,6 +66,7 @@ flutter:
     - assets/images/icons/
     - assets/images/ui/
     - assets/images/bg/
+    - assets/images/balls/
     - assets/audio/sfx/
     - assets/audio/music/
 

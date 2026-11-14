@@ -52,10 +52,13 @@ class ShopController extends GetxController {
 
   void _toast(String msg) {
     Get.closeAllSnackbars();
-    Get.snackbar('Shop', msg,
-        colorText: Colors.white,
-        backgroundColor: const Color(0xCC1B1640),
-        margin: const EdgeInsets.all(16),
-        duration: const Duration(seconds: 2));
+    Get.snackbar(
+      'Shop',
+      msg,
+      colorText: Colors.white,
+      backgroundColor: const Color(0xCC1B1640),
+      margin: const EdgeInsets.all(16),
+      duration: const Duration(seconds: 2),
+    );
   }
 }

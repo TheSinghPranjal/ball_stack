@@ -444,7 +444,7 @@ class _StatsRow extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const _Laurel(),
+          const NeonLaurel(),
           const SizedBox(width: 12),
           Text('LEVEL $level', style: style),
           Container(
@@ -455,60 +455,11 @@ class _StatsRow extends StatelessWidget {
           ),
           Text('BEST ${formatNumber(best)}', style: style.copyWith(color: AppColors.gold)),
           const SizedBox(width: 12),
-          const _Laurel(mirror: true),
+          const NeonLaurel(mirror: true),
         ],
       ),
     );
   }
-}
-
-/// Small golden laurel branch.
-class _Laurel extends StatelessWidget {
-  const _Laurel({this.mirror = false});
-
-  final bool mirror;
-
-  @override
-  Widget build(BuildContext context) {
-    return Transform.flip(
-      flipX: mirror,
-      child: const CustomPaint(size: Size(22, 34), painter: _LaurelPainter()),
-    );
-  }
-}
-
-class _LaurelPainter extends CustomPainter {
-  const _LaurelPainter();
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final w = size.width, h = size.height;
-    final stem = Paint()
-      ..color = const Color(0xFFE8B830)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2
-      ..strokeCap = StrokeCap.round;
-    final path = Path()
-      ..moveTo(w * 0.85, h * 0.98)
-      ..quadraticBezierTo(w * 0.05, h * 0.7, w * 0.45, h * 0.02);
-    canvas.drawPath(path, stem);
-    final leaf = Paint()
-      ..shader = const LinearGradient(colors: [Color(0xFFFFE680), Color(0xFFE0A020)]).createShader(Offset.zero & size);
-    final metric = path.computeMetrics().first;
-    for (var i = 0; i < 4; i++) {
-      final t = metric.getTangentForOffset(metric.length * (0.18 + i * 0.22))!;
-      for (final side in [-1.0, 1.0]) {
-        canvas.save();
-        canvas.translate(t.position.dx, t.position.dy);
-        canvas.rotate(-t.angle + math.pi + side * 0.75);
-        canvas.drawOval(Rect.fromLTWH(0, -2.6, 9, 5.2), leaf);
-        canvas.restore();
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class _PlayButton extends StatefulWidget {

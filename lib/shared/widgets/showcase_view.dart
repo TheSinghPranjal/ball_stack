@@ -7,8 +7,6 @@ import '../../app/theme/colors.dart';
 import '../../core/constants/game_constants.dart';
 import '../../core/enums/game_enums.dart';
 import '../../core/render3d/camera3d.dart';
-import '../../core/render3d/mesh.dart';
-import '../../core/render3d/mesh_instance.dart';
 import '../../core/render3d/scene_renderer.dart';
 import '../../features/gameplay/domain/quality_profile.dart';
 import '../../features/gameplay/engine/camera_controller.dart';
@@ -256,104 +254,6 @@ class _ShowcasePainter extends CustomPainter {
     final xc = dx * c.rx + dy * c.ry + dz * c.rz;
     final yc = dx * c.ux + dy * c.uy + dz * c.uz;
     return Offset(c.cx + c.focal * xc / zc, c.cy - c.focal * yc / zc);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
-}
-
-/// Spinning 3D preview of a single ball skin (shop).
-class BallPreviewView extends StatefulWidget {
-  const BallPreviewView({super.key, required this.skin});
-
-  final BallSkin skin;
-
-  @override
-  State<BallPreviewView> createState() => _BallPreviewViewState();
-}
-
-class _BallPreviewViewState extends State<BallPreviewView> with SingleTickerProviderStateMixin {
-  late final Ticker _ticker;
-  final RenderScene _scene = RenderScene();
-  final SceneRenderer _renderer = SceneRenderer(initialCapacity: 2000);
-  late MeshInstance _ball;
-  late MeshInstance _pedestal;
-  final ValueNotifier<int> _tick = ValueNotifier(0);
-  double _t = 0;
-  Duration _last = Duration.zero;
-
-  @override
-  void initState() {
-    super.initState();
-    _ball = MeshInstance(SceneManager.ballMesh(widget.skin, 22));
-    final b = MeshBuilder();
-    // simple pedestal disc
-    for (var j = 0; j < 32; j++) {
-      final a0 = 2 * math.pi * j / 32, a1 = 2 * math.pi * (j + 1) / 32;
-      b.triangle(
-        [0, 0, 0],
-        [0.5 * math.sin(a0), 0, 0.5 * math.cos(a0)],
-        [0.5 * math.sin(a1), 0, 0.5 * math.cos(a1)],
-        0x55FFFFFF,
-        0x00FFFFFF,
-        0x00FFFFFF,
-      );
-    }
-    _pedestal = MeshInstance(b.build(MeshMaterial.decal))..depthBias = 0.5;
-    _scene.lighting
-      ..fogNear = 100
-      ..fogFar = 200
-      ..skyColor = 0xFFE8E0FF
-      ..groundColor = 0xFF3A2A70
-      ..normalize();
-    _scene.objects.addAll([_pedestal, _ball]);
-    _ticker = createTicker(_onTick)..start();
-  }
-
-  @override
-  void didUpdateWidget(BallPreviewView old) {
-    super.didUpdateWidget(old);
-    if (old.skin.id != widget.skin.id) _ball.mesh = SceneManager.ballMesh(widget.skin, 22);
-  }
-
-  void _onTick(Duration elapsed) {
-    final dt = _last == Duration.zero ? 0.0 : (elapsed - _last).inMicroseconds / 1e6;
-    _last = elapsed;
-    _t += dt;
-    final bob = math.sin(_t * 2.4).abs() * 0.12;
-    _ball
-      ..setPosition(0, GameConstants.ballRadius + bob, 0)
-      ..setEuler(0.35, _t * 1.2, 0.15);
-    _pedestal
-      ..setPosition(0, 0, 0)
-      ..setScale(1 - bob * 1.5);
-    _tick.value++;
-  }
-
-  @override
-  void dispose() {
-    _ticker.dispose();
-    _tick.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => CustomPaint(size: Size.infinite, painter: _BallPainter(this));
-}
-
-class _BallPainter extends CustomPainter {
-  _BallPainter(this.s) : super(repaint: s._tick);
-
-  final _BallPreviewViewState s;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final cam = s._scene.camera
-      ..lookAt(0, 0.75, 1.55, 0, 0.3, 0)
-      ..cx = size.width / 2
-      ..cy = size.height / 2;
-    cam.frameWidth(size.shortestSide, 1.25, 1.7);
-    s._renderer.render(canvas, s._scene);
   }
 
   @override
