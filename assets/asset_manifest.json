@@ -1,0 +1,339 @@
+{
+  "game": "Ball Game : Fire Ball",
+  "generatedBy": "tools/gen_assets.py",
+  "assets": [
+    {
+      "name": "logo",
+      "path": "assets/images/logo/logo.png",
+      "format": "png",
+      "dimensions": "700x320",
+      "usage": "Splash + home title logo",
+      "dependencies": [],
+      "loadingPriority": "critical"
+    },
+    {
+      "name": "app_icon",
+      "path": "assets/images/icons/app_icon.png",
+      "format": "png",
+      "dimensions": "1024x1024",
+      "usage": "Store/launcher icon source",
+      "dependencies": [],
+      "loadingPriority": "build-time"
+    },
+    {
+      "name": "coin_icon",
+      "path": "assets/images/icons/coin.png",
+      "format": "png",
+      "dimensions": "128x128",
+      "usage": "Coin badge, rewards, prices",
+      "dependencies": [],
+      "loadingPriority": "critical"
+    },
+    {
+      "name": "star_icon",
+      "path": "assets/images/icons/star.png",
+      "format": "png",
+      "dimensions": "128x128",
+      "usage": "Level stars, level complete",
+      "dependencies": [],
+      "loadingPriority": "normal"
+    },
+    {
+      "name": "shield_icon",
+      "path": "assets/images/icons/shield.png",
+      "format": "png",
+      "dimensions": "128x128",
+      "usage": "Shield booster",
+      "dependencies": [],
+      "loadingPriority": "normal"
+    },
+    {
+      "name": "gift_icon",
+      "path": "assets/images/icons/gift.png",
+      "format": "png",
+      "dimensions": "128x128",
+      "usage": "Daily reward",
+      "dependencies": [],
+      "loadingPriority": "normal"
+    },
+    {
+      "name": "victory_illustration",
+      "path": "assets/images/ui/victory.png",
+      "format": "png",
+      "dimensions": "256x256",
+      "usage": "victory overlay hero image",
+      "dependencies": [],
+      "loadingPriority": "normal"
+    },
+    {
+      "name": "failure_illustration",
+      "path": "assets/images/ui/failure.png",
+      "format": "png",
+      "dimensions": "256x256",
+      "usage": "failure overlay hero image",
+      "dependencies": [],
+      "loadingPriority": "normal"
+    },
+    {
+      "name": "bounce",
+      "path": "assets/audio/sfx/bounce.wav",
+      "format": "wav (PCM16 mono 32 kHz)",
+      "dimensions": "0.14s",
+      "usage": "Ball bounces on platform",
+      "dependencies": [],
+      "loadingPriority": "critical"
+    },
+    {
+      "name": "land",
+      "path": "assets/audio/sfx/land.wav",
+      "format": "wav (PCM16 mono 32 kHz)",
+      "dimensions": "0.22s",
+      "usage": "Ball lands on base",
+      "dependencies": [],
+      "loadingPriority": "critical"
+    },
+    {
+      "name": "pass_1",
+      "path": "assets/audio/sfx/pass_1.wav",
+      "format": "wav (PCM16 mono 32 kHz)",
+      "dimensions": "0.16s",
+      "usage": "Floor passed, combo step 1",
+      "dependencies": [],
+      "loadingPriority": "critical"
+    },
+    {
+      "name": "pass_2",
+      "path": "assets/audio/sfx/pass_2.wav",
+      "format": "wav (PCM16 mono 32 kHz)",
+      "dimensions": "0.16s",
+      "usage": "Floor passed, combo step 2",
+      "dependencies": [],
+      "loadingPriority": "critical"
+    },
+    {
+      "name": "pass_3",
+      "path": "assets/audio/sfx/pass_3.wav",
+      "format": "wav (PCM16 mono 32 kHz)",
+      "dimensions": "0.16s",
+      "usage": "Floor passed, combo step 3",
+      "dependencies": [],
+      "loadingPriority": "critical"
+    },
+    {
+      "name": "pass_4",
+      "path": "assets/audio/sfx/pass_4.wav",
+      "format": "wav (PCM16 mono 32 kHz)",
+      "dimensions": "0.16s",
+      "usage": "Floor passed, combo step 4",
+      "dependencies": [],
+      "loadingPriority": "critical"
+    },
+    {
+      "name": "pass_5",
+      "path": "assets/audio/sfx/pass_5.wav",
+      "format": "wav (PCM16 mono 32 kHz)",
+      "dimensions": "0.16s",
+      "usage": "Floor passed, combo step 5",
+      "dependencies": [],
+      "loadingPriority": "critical"
+    },
+    {
+      "name": "pass_6",
+      "path": "assets/audio/sfx/pass_6.wav",
+      "format": "wav (PCM16 mono 32 kHz)",
+      "dimensions": "0.16s",
+      "usage": "Floor passed, combo step 6",
+      "dependencies": [],
+      "loadingPriority": "critical"
+    },
+    {
+      "name": "pass_7",
+      "path": "assets/audio/sfx/pass_7.wav",
+      "format": "wav (PCM16 mono 32 kHz)",
+      "dimensions": "0.16s",
+      "usage": "Floor passed, combo step 7",
+      "dependencies": [],
+      "loadingPriority": "critical"
+    },
+    {
+      "name": "pass_8",
+      "path": "assets/audio/sfx/pass_8.wav",
+      "format": "wav (PCM16 mono 32 kHz)",
+      "dimensions": "0.16s",
+      "usage": "Floor passed, combo step 8",
+      "dependencies": [],
+      "loadingPriority": "critical"
+    },
+    {
+      "name": "break",
+      "path": "assets/audio/sfx/break.wav",
+      "format": "wav (PCM16 mono 32 kHz)",
+      "dimensions": "0.35s",
+      "usage": "Platform shatter",
+      "dependencies": [],
+      "loadingPriority": "critical"
+    },
+    {
+      "name": "smash",
+      "path": "assets/audio/sfx/smash.wav",
+      "format": "wav (PCM16 mono 32 kHz)",
+      "dimensions": "0.50s",
+      "usage": "Smash through a floor",
+      "dependencies": [],
+      "loadingPriority": "critical"
+    },
+    {
+      "name": "fireball",
+      "path": "assets/audio/sfx/fireball.wav",
+      "format": "wav (PCM16 mono 32 kHz)",
+      "dimensions": "0.60s",
+      "usage": "Fireball / smash mode activation",
+      "dependencies": [],
+      "loadingPriority": "critical"
+    },
+    {
+      "name": "combo",
+      "path": "assets/audio/sfx/combo.wav",
+      "format": "wav (PCM16 mono 32 kHz)",
+      "dimensions": "0.32s",
+      "usage": "Combo milestone",
+      "dependencies": [],
+      "loadingPriority": "critical"
+    },
+    {
+      "name": "coin",
+      "path": "assets/audio/sfx/coin.wav",
+      "format": "wav (PCM16 mono 32 kHz)",
+      "dimensions": "0.29s",
+      "usage": "Coin collected / reward",
+      "dependencies": [],
+      "loadingPriority": "critical"
+    },
+    {
+      "name": "click",
+      "path": "assets/audio/sfx/click.wav",
+      "format": "wav (PCM16 mono 32 kHz)",
+      "dimensions": "0.05s",
+      "usage": "UI button press",
+      "dependencies": [],
+      "loadingPriority": "critical"
+    },
+    {
+      "name": "near_miss",
+      "path": "assets/audio/sfx/near_miss.wav",
+      "format": "wav (PCM16 mono 32 kHz)",
+      "dimensions": "0.18s",
+      "usage": "Close-call bonus",
+      "dependencies": [],
+      "loadingPriority": "critical"
+    },
+    {
+      "name": "level_complete",
+      "path": "assets/audio/sfx/level_complete.wav",
+      "format": "wav (PCM16 mono 32 kHz)",
+      "dimensions": "1.04s",
+      "usage": "Level complete fanfare",
+      "dependencies": [],
+      "loadingPriority": "critical"
+    },
+    {
+      "name": "game_over",
+      "path": "assets/audio/sfx/game_over.wav",
+      "format": "wav (PCM16 mono 32 kHz)",
+      "dimensions": "0.72s",
+      "usage": "Ball shatters / game over",
+      "dependencies": [],
+      "loadingPriority": "critical"
+    },
+    {
+      "name": "shield",
+      "path": "assets/audio/sfx/shield.wav",
+      "format": "wav (PCM16 mono 32 kHz)",
+      "dimensions": "0.28s",
+      "usage": "Shield absorbs a hazard",
+      "dependencies": [],
+      "loadingPriority": "critical"
+    },
+    {
+      "name": "music_loop",
+      "path": "assets/audio/music/music_loop.wav",
+      "format": "wav (PCM16 mono 32 kHz)",
+      "dimensions": "17.14s",
+      "usage": "Background music (seamless 8-bar loop)",
+      "dependencies": [],
+      "loadingPriority": "deferred"
+    },
+    {
+      "name": "ball_mesh",
+      "path": "lib/core/render3d/mesh_factory.dart#sphere",
+      "format": "procedural mesh",
+      "dimensions": "UV sphere r=0.3, 10-24 stacks by quality",
+      "usage": "Player ball (all skins)",
+      "dependencies": [],
+      "loadingPriority": "runtime-generated"
+    },
+    {
+      "name": "platform_segment_mesh",
+      "path": "lib/features/gameplay/engine/platform_controller.dart",
+      "format": "procedural mesh",
+      "dimensions": "annular wedge 22.5\u00b0, r 0.8-2.6, h 0.45",
+      "usage": "Safe/danger/breakable/bonus/blink segments",
+      "dependencies": [],
+      "loadingPriority": "runtime-generated"
+    },
+    {
+      "name": "pillar_mesh",
+      "path": "lib/features/gameplay/engine/platform_controller.dart",
+      "format": "procedural mesh",
+      "dimensions": "cylinder r=0.72 per floor",
+      "usage": "Central tower column",
+      "dependencies": [],
+      "loadingPriority": "runtime-generated"
+    },
+    {
+      "name": "sweeper_mesh",
+      "path": "lib/features/gameplay/engine/platform_controller.dart",
+      "format": "procedural mesh",
+      "dimensions": "arc arm 28\u00b0",
+      "usage": "Rotating hazard",
+      "dependencies": [],
+      "loadingPriority": "runtime-generated"
+    },
+    {
+      "name": "base_mesh",
+      "path": "lib/features/gameplay/engine/platform_controller.dart",
+      "format": "procedural mesh",
+      "dimensions": "disc r=3.2",
+      "usage": "Finish platform",
+      "dependencies": [],
+      "loadingPriority": "runtime-generated"
+    },
+    {
+      "name": "fragment_mesh",
+      "path": "lib/features/gameplay/engine/destruction_system.dart",
+      "format": "procedural mesh",
+      "dimensions": "wedge shard",
+      "usage": "Destruction debris (pooled)",
+      "dependencies": [],
+      "loadingPriority": "runtime-generated"
+    },
+    {
+      "name": "skins",
+      "path": "lib/features/shop/data/skin_catalog.dart",
+      "format": "material definitions",
+      "dimensions": "8 skins",
+      "usage": "Ball materials and trails",
+      "dependencies": [],
+      "loadingPriority": "runtime-generated"
+    },
+    {
+      "name": "themes",
+      "path": "lib/app/theme/colors.dart",
+      "format": "palette definitions",
+      "dimensions": "6 themes",
+      "usage": "Environment + platform colours",
+      "dependencies": [],
+      "loadingPriority": "runtime-generated"
+    }
+  ]
+}

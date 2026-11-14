@@ -1,0 +1,101 @@
+import '../domain/ball_skin.dart';
+
+/// Original ball skins. Prices in coins.
+abstract final class SkinCatalog {
+  static const String defaultSkinId = 'bubblegum';
+
+  static const List<BallSkin> all = [
+    BallSkin(
+      id: 'bubblegum',
+      name: 'Bubblegum',
+      price: 0,
+      base: 0xFFFF5A7A,
+      accent: 0xFFFFFFFF,
+      pattern: BallPattern.band,
+      trail: 0xFFFF8FA8,
+    ),
+    BallSkin(
+      id: 'chrome',
+      name: 'Chrome',
+      price: 300,
+      base: 0xFFB9C2D6,
+      accent: 0xFF5E6680,
+      pattern: BallPattern.stripes,
+      trail: 0xFFDDE6FF,
+      specular: 1.4,
+      shininess: 70,
+      rim: 0.55,
+    ),
+    BallSkin(
+      id: 'neon',
+      name: 'Neon Pulse',
+      price: 500,
+      base: 0xFF26F0FF,
+      accent: 0xFFFF3BD4,
+      pattern: BallPattern.stripes,
+      trail: 0xFF26F0FF,
+      emissive: 0.45,
+      rim: 0.6,
+    ),
+    BallSkin(
+      id: 'ember',
+      name: 'Ember',
+      price: 800,
+      base: 0xFFFF6A1A,
+      accent: 0xFFFFD34D,
+      pattern: BallPattern.swirl,
+      trail: 0xFFFF8A2A,
+      emissive: 0.35,
+      fiery: true,
+    ),
+    BallSkin(
+      id: 'glacier',
+      name: 'Glacier',
+      price: 800,
+      base: 0xFFBDEBFF,
+      accent: 0xFF4FA8FF,
+      pattern: BallPattern.swirl,
+      trail: 0xFFCFF3FF,
+      specular: 1.1,
+      shininess: 60,
+      rim: 0.5,
+    ),
+    BallSkin(
+      id: 'prism',
+      name: 'Prism',
+      price: 1200,
+      base: 0xFFFFFFFF,
+      accent: 0xFFFFFFFF,
+      pattern: BallPattern.rainbow,
+      trail: 0xFFFFE066,
+      rim: 0.4,
+    ),
+    BallSkin(
+      id: 'nebula',
+      name: 'Nebula',
+      price: 1600,
+      base: 0xFF3A1D7A,
+      accent: 0xFFFFF6C2,
+      pattern: BallPattern.dots,
+      trail: 0xFFB18CFF,
+      emissive: 0.2,
+      rim: 0.7,
+      premium: true,
+    ),
+    BallSkin(
+      id: 'royal',
+      name: 'Royal Gold',
+      price: 2500,
+      base: 0xFFFFC93C,
+      accent: 0xFFB8860B,
+      pattern: BallPattern.band,
+      trail: 0xFFFFE07A,
+      specular: 1.5,
+      shininess: 80,
+      rim: 0.5,
+      premium: true,
+    ),
+  ];
+
+  static BallSkin byId(String id) => all.firstWhere((s) => s.id == id, orElse: () => all.first);
+}
